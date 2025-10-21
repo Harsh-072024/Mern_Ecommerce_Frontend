@@ -1,0 +1,20 @@
+@media (max-width: 768px) {
+  .Toastify__toast-container {
+    bottom: 20px !important; /* ⬅️ This adds spacing from bottom */
+    width: auto !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    padding: 0 !important;
+  }
+
+  .Toastify__toast {
+    max-width: 90% !important;
+    min-width: 250px !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    font-size: 1rem !important;
+    line-height: 1.4;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
