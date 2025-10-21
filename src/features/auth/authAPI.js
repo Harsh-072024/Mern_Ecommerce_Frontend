@@ -1,7 +1,8 @@
 // A mock function to mimic making an async request for data
+const BASE_URL = require('../../app/config')
 export function createUser(userData) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/auth/signup', {
+    const response = await fetch(`${BASE_URL}/auth/signup`, {
       method: 'POST',
       body: JSON.stringify(userData),
       headers: { 'content-type': 'application/json' },
@@ -14,7 +15,7 @@ export function createUser(userData) {
 export function loginUser(loginInfo) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('/auth/login', {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
         body: JSON.stringify(loginInfo),
         headers: { 'content-type': 'application/json' },
@@ -35,7 +36,7 @@ export function loginUser(loginInfo) {
 export function checkAuth() {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('/auth/check');
+      const response = await fetch(`${BASE_URL}/auth/check`);
       if (response.ok) {
         const data = await response.json();
         resolve({ data });
@@ -52,7 +53,7 @@ export function checkAuth() {
 export function resetPasswordRequest(email) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('/auth/reset-password-request', {
+      const response = await fetch(`${BASE_URL}/auth/reset-password-request`, {
         method: 'POST',
         body: JSON.stringify({ email }),
         headers: { 'content-type': 'application/json' },
@@ -73,7 +74,7 @@ export function resetPasswordRequest(email) {
 export function resetPassword(data) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('/auth/reset-password', {
+      const response = await fetch(`${BASE_URL}/auth/reset-password`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: { 'content-type': 'application/json' },
@@ -94,7 +95,7 @@ export function resetPassword(data) {
 export function signOut(userId) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('/auth/logout');
+      const response = await fetch(`${BASE_URL}/auth/logout`);
       if (response.ok) {
         resolve({ data: 'success' });
       } else {

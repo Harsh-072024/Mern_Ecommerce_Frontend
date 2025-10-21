@@ -1,8 +1,10 @@
 // A mock function to mimic making an async request for data
 
+import { BASE_URL } from "../../app/config";
+
 export function fetchProductByID(id) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/products/' + id);
+    const response = await fetch(`${BASE_URL}/products/` + id);
     const data = await response.json();
     resolve({ data });
   });
@@ -32,7 +34,7 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
 
   return new Promise(async (resolve) => {
     //  we will not hard coded server url
-    const response = await fetch('/products?' + queryString);
+    const response = await fetch(`${BASE_URL}/products?`  + queryString);
     const data = await response.json();
     const totalItems = response.headers.get('X-Total-Count');
     resolve({ data: { products: data, totalItems: +totalItems } });
@@ -41,14 +43,14 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
 
 export function fetchCategories() {
   return new Promise(async (resolve) => {
-    const response = await fetch('/categories');
+    const response = await fetch(`${BASE_URL}/categories` );
     const data = await response.json();
     resolve({ data });
   });
 }
 export function fetchBrands() {
   return new Promise(async (resolve) => {
-    const response = await fetch('/brands');
+    const response = await fetch(`${BASE_URL}/brands` );
     const data = await response.json();
     resolve({ data });
   });
@@ -56,7 +58,7 @@ export function fetchBrands() {
 
 export function createProduct(product) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/products/', {
+    const response = await fetch(`${BASE_URL}/products/` , {
       method: 'POST',
       body: JSON.stringify(product),
       headers: { 'content-type': 'application/json' },
@@ -67,7 +69,7 @@ export function createProduct(product) {
 }
 export function updateProduct(update) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/products/' + update.id, {
+    const response = await fetch(`${BASE_URL}/products/`  + update.id, {
       method: 'PATCH',
       body: JSON.stringify(update),
       headers: { 'content-type': 'application/json' },

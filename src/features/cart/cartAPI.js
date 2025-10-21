@@ -1,6 +1,8 @@
+import { BASE_URL } from "../../app/config";
+
 export function addToCart(item) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/cart', {
+    const response = await fetch(`${BASE_URL}/cart`, {
       method: 'POST',
       body: JSON.stringify(item),
       headers: { 'content-type': 'application/json' },
@@ -13,7 +15,7 @@ export function addToCart(item) {
 
 export function fetchItemsByUserId() {
   return new Promise(async (resolve) => {
-    const response = await fetch('/cart');
+    const response = await fetch(`${BASE_URL}/cart`);
     const data = await response.json();
     resolve({ data });
   });
@@ -21,7 +23,7 @@ export function fetchItemsByUserId() {
 
 export function updateCart(update) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/cart/' + update.id, {
+    const response = await fetch(`${BASE_URL}/cart/` + update.id, {
       method: 'PATCH',
       body: JSON.stringify(update),
       headers: { 'content-type': 'application/json' },
@@ -34,7 +36,7 @@ export function updateCart(update) {
 
 export function deleteItemFromCart(itemId) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/cart/' + itemId, {
+    const response = await fetch(`${BASE_URL}/cart/` + itemId, {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
     });
