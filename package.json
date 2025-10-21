@@ -2,7 +2,7 @@
   "name": "my-ecommerce-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080/",
+  "proxy": "https://mern-ecommerce-backend-tj4e.onrender.com/",
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
