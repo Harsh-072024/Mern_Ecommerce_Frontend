@@ -1,5 +1,5 @@
 // A mock function to mimic making an async request for data
-const BASE_URL = require('../../app/config')
+import { BASE_URL } from "../../app/config";
 export function createUser(userData) {
   return new Promise(async (resolve) => {
     const response = await fetch(`${BASE_URL}/auth/signup`, {

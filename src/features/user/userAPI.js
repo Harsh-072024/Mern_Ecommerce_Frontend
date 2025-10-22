@@ -1,4 +1,4 @@
-import { BASE_URL } from "../../app/config";
+import { BASE_URL } from '../../app/config';
 
 export function fetchLoggedInUserOrders() {
   return new Promise(async (resolve) => {
@@ -10,7 +10,10 @@ export function fetchLoggedInUserOrders() {
 
 export function fetchLoggedInUser() {
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BASE_URL}/users/own`);
+    const response = await fetch(`${BASE_URL}/users/own`, {
+      method: 'GET',
+      credentials: 'include', // 🔥 this ensures cookie is sent
+    });
     const data = await response.json();
     resolve({ data });
   });

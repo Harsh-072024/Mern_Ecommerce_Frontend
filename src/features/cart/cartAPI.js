@@ -15,7 +15,10 @@ export function addToCart(item) {
 
 export function fetchItemsByUserId() {
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BASE_URL}/cart`);
+    const response = await fetch(`${BASE_URL}/cart`,{
+  method: "GET",
+  credentials: "include", // 🔥 this ensures cookie is sent
+});
     const data = await response.json();
     resolve({ data });
   });
