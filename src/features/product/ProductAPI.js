@@ -35,7 +35,7 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
   if (admin) {
     queryString += `admin=true`;
   }
-  console.log('queryString', queryString)
+  // console.log('queryString', queryString)
 
   // its prevent all products fetch and categories  or filters products override
   if(!queryString) return;
