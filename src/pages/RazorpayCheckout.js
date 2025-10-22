@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { selectCurrentorder } from '../features/order/OrderSlice';
 import { useSelector } from 'react-redux';
+import { BASE_URL } from '../app/config';
 
 function RazorpayCheckout() {
   const currentOrder = useSelector(selectCurrentorder);
@@ -31,7 +32,7 @@ function RazorpayCheckout() {
 
     //1. call backend to create razorpay order
     try {
-      const result = await axios.post('/create-order', {
+      const result = await axios.post(`${BASE_URL}/create-order`, {
         totalAmount: currentOrder.totalAmount,
       });
 
@@ -60,7 +61,7 @@ function RazorpayCheckout() {
             razorpaySignature: response.razorpay_signature,
           };
 
-          const verifyRes = await axios.post('/verify-payment', data);
+          const verifyRes = await axios.post(`${BASE_URL}/verify-payment`, data);
 
           if (verifyRes.data.success) {
             window.location.href = `/order-success/${currentOrder.id}`;
