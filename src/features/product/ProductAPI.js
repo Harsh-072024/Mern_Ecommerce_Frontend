@@ -4,7 +4,10 @@ import { BASE_URL } from "../../app/config";
 
 export function fetchProductByID(id) {
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BASE_URL}/products/` + id);
+    const response = await fetch(`${BASE_URL}/products/${id}`,{
+        method: 'GET',
+        credentials: "include", 
+      });
     const data = await response.json();
     resolve({ data });
   });
@@ -14,6 +17,7 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
   // filter = {"category": ["smartphone", "laptops"]}
   // sort = {"_sort": "-price"}
   // pagination = {_page : 1, _limit=10 }
+
   let queryString = '';
   for (let key in filter) {
     const categoryValues = filter[key];
@@ -31,10 +35,17 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
   if (admin) {
     queryString += `admin=true`;
   }
+  console.log('queryString', queryString)
+
+  // its prevent all products fetch and categories  or filters products override
+  if(!queryString) return;
 
   return new Promise(async (resolve) => {
     //  we will not hard coded server url
-    const response = await fetch(`${BASE_URL}/products?`  + queryString);
+    const response = await fetch(`${BASE_URL}/products?`+queryString,{
+        method: 'GET',
+        credentials: "include", 
+      } );
     const data = await response.json();
     const totalItems = response.headers.get('X-Total-Count');
     resolve({ data: { products: data, totalItems: +totalItems } });
@@ -43,14 +54,20 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
 
 export function fetchCategories() {
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BASE_URL}/categories` );
+    const response = await fetch(`${BASE_URL}/categories`,{
+        method: 'GET',
+        credentials: "include", 
+      } );
     const data = await response.json();
     resolve({ data });
   });
 }
 export function fetchBrands() {
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BASE_URL}/brands` );
+    const response = await fetch(`${BASE_URL}/brands`,{
+        method: 'GET',
+        credentials: "include", 
+      } );
     const data = await response.json();
     resolve({ data });
   });
@@ -62,6 +79,7 @@ export function createProduct(product) {
       method: 'POST',
       body: JSON.stringify(product),
       headers: { 'content-type': 'application/json' },
+      credentials: "include", 
     });
     const data = await response.json();
     resolve({ data });
@@ -73,6 +91,7 @@ export function updateProduct(update) {
       method: 'PATCH',
       body: JSON.stringify(update),
       headers: { 'content-type': 'application/json' },
+      credentials: "include", 
     });
     const data = await response.json();
     resolve({ data });

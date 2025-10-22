@@ -1,4 +1,4 @@
-import { BASE_URL } from "../../app/config";
+import { BASE_URL } from '../../app/config';
 
 export function addToCart(item) {
   return new Promise(async (resolve) => {
@@ -6,6 +6,7 @@ export function addToCart(item) {
       method: 'POST',
       body: JSON.stringify(item),
       headers: { 'content-type': 'application/json' },
+      credentials: 'include',
     });
     const data = await response.json();
 
@@ -15,10 +16,10 @@ export function addToCart(item) {
 
 export function fetchItemsByUserId() {
   return new Promise(async (resolve) => {
-    const response = await fetch(`${BASE_URL}/cart`,{
-  method: "GET",
-  credentials: "include", // 🔥 this ensures cookie is sent
-});
+    const response = await fetch(`${BASE_URL}/cart`, {
+      method: 'GET',
+      credentials: 'include',
+    });
     const data = await response.json();
     resolve({ data });
   });
@@ -30,6 +31,7 @@ export function updateCart(update) {
       method: 'PATCH',
       body: JSON.stringify(update),
       headers: { 'content-type': 'application/json' },
+      credentials: "include", 
     });
     const data = await response.json();
 
@@ -42,6 +44,7 @@ export function deleteItemFromCart(itemId) {
     const response = await fetch(`${BASE_URL}/cart/` + itemId, {
       method: 'DELETE',
       headers: { 'content-type': 'application/json' },
+      credentials: "include", 
     });
     const data = await response.json();
 
