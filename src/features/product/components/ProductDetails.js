@@ -6,10 +6,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { addToCartAsync, selectItems } from '../../cart/cartSlice';
 
-
 import { toast } from 'react-toastify';
 import { Grid } from 'react-loader-spinner';
-
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -22,11 +20,12 @@ export default function ProductDeatils() {
   const dispatch = useDispatch();
   const params = useParams();
   const items = useSelector(selectItems);
+  const [previewImage, setPreviewImage] = useState('');
 
   const handleCart = (e) => {
     e.preventDefault();
     if (items.findIndex((item) => item.product.id === product.id) < 0) {
-      const newItem = { product: product.id, quantity: 1};
+      const newItem = { product: product.id, quantity: 1 };
       if (selectedColor) {
         newItem.color = selectedColor;
       }
@@ -45,6 +44,11 @@ export default function ProductDeatils() {
     dispatch(fetchProductByIdAsync(params.id));
   }, [dispatch, params.id]);
 
+  useEffect(() => {
+    if (product?.images?.length > 0) {
+      setPreviewImage(product.images[0]);
+    }
+  }, [product]);
   return (
     <div className="bg-white">
       {status === 'loading' && (
@@ -101,27 +105,31 @@ export default function ProductDeatils() {
           </nav>
 
           {/* Image gallery */}
-          <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-8 lg:px-8">
-            <img
-              alt={product.title}
-              src={product.images[0]}
-              className="row-span-2 aspect-3/4 size-full rounded-lg object-cover max-lg:hidden"
-            />
-            <img
-              alt={product.title}
-              src={product.images?.[1]}
-              className="col-start-2 aspect-3/2 size-full rounded-lg object-cover max-lg:hidden"
-            />
-            <img
-              alt={product.title}
-              src={product.images?.[2]}
-              className="col-start-2 row-start-2 aspect-3/2 size-full rounded-lg object-cover max-lg:hidden"
-            />
-            <img
-              alt={product.title}
-              src={product.images?.[3]}
-              className="row-span-2 aspect-4/5 size-full object-cover sm:rounded-lg lg:aspect-3/4"
-            />
+          <div className="mx-auto mt-6 max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-6 px-6">
+            {/* Thumbnails – left side */}
+            <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible">
+              {product?.images?.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  onClick={() => setPreviewImage(img)}
+                  className={`h-20 w-20 object-cover rounded-md border cursor-pointer ${
+                    previewImage === img ? 'border-blue-600 shadow-md' : 'border-gray-300'
+                  }`}
+                  alt="thumbnail"
+                />
+              ))}
+            </div>
+
+            {/* Main Image – right side */}
+            <div className="lg:col-span-2 flex justify-center">
+              <img
+                src={previewImage}
+                alt="Product"
+                className="h-[500px] w-full object-contain rounded-lg border"
+              />
+              
+            </div>
           </div>
 
           {/* Product info */}
@@ -135,7 +143,7 @@ export default function ProductDeatils() {
             {/* Options */}
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
-              <p className="text-xl line-through tracking-tight text-gray-900">${product.price}</p>
+              <p className="text-xl line-through tracking-tight text-gray-500">${product.price}</p>
               <p className="text-3xl  tracking-tight text-gray-900">${product.discountPrice}</p>
 
               {/* Reviews */}
@@ -160,18 +168,12 @@ export default function ProductDeatils() {
 
               <form className="mt-10">
                 {/* Colors */}
-               {product.colors && product.colors.length > 0 && (
+                {product.colors && product.colors.length > 0 && (
                   <div>
                     <h3 className="text-sm font-medium text-gray-900">Color</h3>
 
-                    <RadioGroup
-                      value={selectedColor}
-                      onChange={setSelectedColor}
-                      className="mt-4"
-                    >
-                      <RadioGroup.Label className="sr-only">
-                        Choose a color
-                      </RadioGroup.Label>
+                    <RadioGroup value={selectedColor} onChange={setSelectedColor} className="mt-4">
+                      <RadioGroup.Label className="sr-only">Choose a color</RadioGroup.Label>
                       <div className="flex items-center space-x-3">
                         {product.colors.map((color) => (
                           <RadioGroup.Option
@@ -207,9 +209,7 @@ export default function ProductDeatils() {
                 {product.sizes && product.sizes.length > 0 && (
                   <div className="mt-10">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        Size
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-900">Size</h3>
                       <a
                         href="#"
                         className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
@@ -218,14 +218,8 @@ export default function ProductDeatils() {
                       </a>
                     </div>
 
-                    <RadioGroup
-                      value={selectedSize}
-                      onChange={setSelectedSize}
-                      className="mt-4"
-                    >
-                      <RadioGroup.Label className="sr-only">
-                        Choose a size
-                      </RadioGroup.Label>
+                    <RadioGroup value={selectedSize} onChange={setSelectedSize} className="mt-4">
+                      <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
                       <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
                         {product.sizes.map((size) => (
                           <RadioGroup.Option
@@ -244,16 +238,12 @@ export default function ProductDeatils() {
                           >
                             {({ active, checked }) => (
                               <>
-                                <RadioGroup.Label as="span">
-                                  {size.name}
-                                </RadioGroup.Label>
+                                <RadioGroup.Label as="span">{size.name}</RadioGroup.Label>
                                 {size.inStock ? (
                                   <span
                                     className={classNames(
                                       active ? 'border' : 'border-2',
-                                      checked
-                                        ? 'border-indigo-500'
-                                        : 'border-transparent',
+                                      checked ? 'border-indigo-500' : 'border-transparent',
                                       'pointer-events-none absolute -inset-px rounded-md'
                                     )}
                                     aria-hidden="true"
@@ -308,19 +298,21 @@ export default function ProductDeatils() {
                 </div>
               </div>
 
-             {product.highlights && product.highlights.length > 0 && <div className="mt-10">
-                <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
+              {product.highlights && product.highlights.length > 0 && (
+                <div className="mt-10">
+                  <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
 
-                <div className="mt-4">
-                  <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                    {product.highlights.map((highlight, index) => (
-                      <li key={index} className="text-gray-400">
-                        <span className="text-gray-600">{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mt-4">
+                    <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
+                      {product.highlights.map((highlight, index) => (
+                        <li key={index} className="text-gray-400">
+                          <span className="text-gray-600">{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>}
+              )}
 
               <div className="mt-10">
                 <h2 className="text-sm font-medium text-gray-900">Details</h2>

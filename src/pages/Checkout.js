@@ -1,37 +1,63 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteItemFromCartAsync, selectItems, updateCartAsync } from '../features/cart/cartSlice';
+import {
+  deleteItemFromCartAsync,
+  selectItems,
+  updateCartAsync,
+  selectCartLoaded,
+} from '../features/cart/cartSlice';
 import { Navigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 import { createOrderAsync, selectCurrentorder } from '../features/order/OrderSlice';
 import { selectUserInfo, updateUserAsync } from '../features/user/userSlice';
+import { Grid } from 'react-loader-spinner';
+import { validateCouponAsync, clearCoupon } from '../features/coupon/couponSlice';
 
 function Checkout() {
   const [open, setOpen] = useState(true);
   const items = useSelector(selectItems);
   const user = useSelector(selectUserInfo);
+  const cartLoaded = useSelector(selectCartLoaded);
   const dispatch = useDispatch();
   const currentorder = useSelector(selectCurrentorder);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentmethod, setPaymentMethod] = useState(null);
+  const [code, setCode] = useState('');
+
+  const { coupon, finalAmount, discount, status, error } = useSelector((state) => state.coupon);
 
   const totalAmount = items.reduce(
-    (amount, item) => (item.product.discountPrice) * item.quantity + amount,
+    (amount, item) => item.product.discountPrice * item.quantity + amount,
     0
   );
+
+  function handleApply() {
+    dispatch(validateCouponAsync({ code, totalAmount }));
+  }
+
   const totalItems = items.reduce((total, item) => item.quantity + total, 0);
   const handleQuantity = (e, item) => {
     dispatch(updateCartAsync({ id: item.id, quantity: +e.target.value }));
   };
+
+  useEffect(() => {
+    dispatch(clearCoupon());
+    setCode("")
+  }, [items])
+
+  if (code === "") {
+  dispatch(clearCoupon());
+}
+
 
   const handleRemove = (e, id) => {
     dispatch(deleteItemFromCartAsync(id));
   };
 
   const handleAddress = (e) => {
-    setSelectedAddress(user.addresses[e.target.value]);
+    setSelectedAddress(user?.addresses?.[e.target.value]);
   };
   const handlePayment = (e) => {
     setPaymentMethod(e.target.value);
@@ -41,7 +67,7 @@ function Checkout() {
       const order = {
         items,
         user: user.id,
-        totalAmount,
+        totalAmount: coupon ? Math.round(finalAmount) : totalAmount,
         totalItems,
         paymentmethod,
         selectedAddress,
@@ -61,13 +87,28 @@ function Checkout() {
     reset,
     formState: { errors },
   } = useForm();
+
+  if (!cartLoaded) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Grid
+          height="80"
+          width="80"
+          color="rgb(79, 70, 229)"
+          ariaLabel="grid-loading"
+          radius="12.5"
+          visible={true}
+        />
+      </div>
+    );
+  }
   return (
     <>
       {!items.length && <Navigate to="/" replace={true}></Navigate>}
-      {currentorder && currentorder.paymentmethod === 'cash' &&(
+      {currentorder && currentorder.paymentmethod === 'cash' && (
         <Navigate to={`/order-success/${currentorder.id}`} replace={true}></Navigate>
       )}
-      {currentorder && currentorder.paymentmethod === 'card' &&(
+      {currentorder && currentorder.paymentmethod === 'card' && (
         <Navigate to={`/razorpay-checkout/`} replace={true}></Navigate>
       )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -77,7 +118,7 @@ function Checkout() {
               className=" bg-white py-5 px-5 mt-12"
               noValidate
               onSubmit={handleSubmit((data) => {
-                dispatch(updateUserAsync({ ...user, addresses: [...user.addresses, data] }));
+                dispatch(updateUserAsync({ ...user, addresses: [...user?.addresses, data] }));
                 reset();
               })}
             >
@@ -239,7 +280,7 @@ function Checkout() {
                   <h2 className="text-base/7 font-semibold text-gray-900">Addresses</h2>
                   <p className="mt-1 text-sm/6 text-gray-600">Choose from existing addresses</p>
                   <ul role="list">
-                    {user.addresses.map((address, index) => (
+                    {user?.addresses?.map((address, index) => (
                       <li
                         key={index}
                         className="flex justify-between gap-x-6 py-5 border-solid border-2 border-gray-200 px-5"
@@ -393,6 +434,58 @@ function Checkout() {
                 <p className="mt-0.5 text-sm text-gray-500">
                   Shipping and taxes calculated at checkout.
                 </p>
+
+                {/* Coupon Section */}
+                <div className="my-6">
+                  <hr className="border-t border-gray-300 mb-4" />
+
+                  <h3 className="text-lg font-semibold text-gray-900">Apply Coupon</h3>
+
+                  <div className="mt-3 flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      placeholder="Enter coupon code"
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    />
+
+                    <button
+                      onClick={handleApply}
+                      className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                    >
+                      Apply
+                    </button>
+
+                    {/* Clear coupon button */}
+                    {coupon && (
+                      <button
+                        onClick={() => dispatch(clearCoupon())}
+                        className="rounded-md bg-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-400"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+
+                  {status === 'loading' && <p className="text-sm text-gray-500">Checking...</p>}
+
+                  {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+
+                  {discount > 0 && (
+                    <div className="mt-4 text-sm text-green-600 font-medium">
+                      Discount Applied: -${Math.round(discount)}
+                    </div>
+                  )}
+
+                  {coupon && (
+                    <div className="flex justify-between text-lg font-bold mt-3">
+                      <p>Final Total</p>
+                      <p>$ {Math.round(finalAmount)}</p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="mt-6">
                   <div
                     onClick={handleOrder}
