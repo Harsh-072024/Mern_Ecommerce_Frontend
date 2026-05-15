@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React from 'react';
 import {
   Disclosure,
   DisclosureButton,
@@ -12,7 +12,6 @@ import { Bars3Icon, ShoppingCartIcon, XMarkIcon } from '@heroicons/react/24/outl
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectItems } from '../cart/cartSlice';
-import { selectLoggedInUser } from '../auth/authSlice';
 import { selectUserInfo } from '../user/userSlice';
 
 const navigation = [
@@ -43,7 +42,7 @@ const Navbar = ({ children }) => {
                 <div className="flex items-center">
                   <div className="shrink-0">
                     <Link to="/">
-                      <img alt="Your Company" src="/ecommerce.png" className="h-[35px] w-auto" />
+                      <img alt="Your Company" src="/logo.svg" className="h-5 text-yellow-600 w-auto" />
                     </Link>
                   </div>
                   <div className="hidden md:block">

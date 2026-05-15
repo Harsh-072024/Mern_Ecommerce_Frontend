@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { createUserAsync, selectLoggedInUser } from '../authSlice';
 import { Link } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Navigate } from 'react-router-dom';
 
 export default function Signup() {
@@ -10,7 +10,7 @@ export default function Signup() {
   const {
     register,
     handleSubmit,
-    watch,
+
     formState: { errors },
   } = useForm();
   const user = useSelector(selectLoggedInUser);
@@ -22,7 +22,12 @@ export default function Signup() {
       {user && <Navigate to="/" replace={true}></Navigate>}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img alt="Your Company" src="/ecommerce.png" className="mx-auto h-20 w-auto" />
+          <img
+            alt="Your Company"
+            src="/logo.svg"
+            className="mx-auto h-10
+           w-auto object-contain"
+          />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
             Create an Account
           </h2>
@@ -40,7 +45,6 @@ export default function Signup() {
                   role: 'user',
                 })
               );
-              // console.log(data);
             })}
             className="space-y-6"
           >
@@ -54,11 +58,13 @@ export default function Signup() {
                   {...register('email', {
                     required: 'email is required',
                     pattern: {
-                      value: /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,
+                      value: /^[\w.-]+@[\w.-]+\.\w{2,4}$/,
                       message: 'email is not valid',
                     },
                   })}
                   type="email"
+                  required
+                  autoComplete="email"
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 focus:outline-offset-2 sm:text-sm"
                 />
                 {errors.email && <p className="text-red-500">{errors.email.message}</p>}

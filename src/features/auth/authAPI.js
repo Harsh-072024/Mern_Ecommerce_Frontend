@@ -26,7 +26,7 @@ export function loginUser(loginInfo) {
         const data = await response.json();
         resolve({ data });
       } else {
-        const error = await response.text();
+        const error = await response.json();
         reject(error);
       }
     } catch (error) {
@@ -68,7 +68,7 @@ export function resetPasswordRequest(email) {
         const data = await response.json();
         resolve({ data });
       } else {
-        const error = await response.text();
+        const error = await response.json();
         reject(error);
       }
     } catch (error) {
@@ -90,7 +90,7 @@ export function resetPassword(data) {
         const data = await response.json();
         resolve({ data });
       } else {
-        const error = await response.text();
+        const error = await response.json();
         reject(error);
       }
     } catch (error) {
