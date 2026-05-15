@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
-import { ChevronDownIcon } from '@heroicons/react/16/solid';
+import  { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearSelectedProduct,
@@ -28,8 +26,6 @@ const ProductForm = () => {
     handleSubmit,
     setValue,
     reset,
-    watch,
-    formState: { errors },
   } = useForm();
 
   const colors = [

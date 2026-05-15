@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  fetchAllProductsAsync,
   fetchBrandsAsync,
   fetchCategoriesAsync,
   fetchProductsByFiltersAsync,
@@ -31,8 +30,6 @@ import {
   MinusIcon,
   PlusIcon,
   Squares2X2Icon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   StarIcon,
 } from '@heroicons/react/20/solid';
 import { Link } from 'react-router-dom';
@@ -106,12 +103,12 @@ export default function ProductList() {
 
   useEffect(() => {
     setPage(1);
-  }, [totalItems, sort]);
+  }, [totalItems, sort, dispatch]);
 
   useEffect(() => {
     dispatch(fetchBrandsAsync());
     dispatch(fetchCategoriesAsync());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

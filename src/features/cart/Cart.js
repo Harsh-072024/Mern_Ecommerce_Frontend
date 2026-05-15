@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   deleteItemFromCartAsync,
@@ -8,8 +8,6 @@ import {
   updateCartAsync,
 } from './cartSlice';
 
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, Navigate } from 'react-router-dom';
 import Modal from '../common/Modal';
 import { Grid } from 'react-loader-spinner';
@@ -20,16 +18,16 @@ export default function Cart() {
   const dispatch = useDispatch();
   const status = useSelector(selectCartStatus);
   const [openModal, setOpenModal] = useState(null);
-  const cartLoaded = useSelector(selectCartLoaded)
+  const cartLoaded = useSelector(selectCartLoaded);
 
   const totalAmount = items.reduce(
-    (amount, item) => (item.product.discountPrice) * item.quantity + amount,
+    (amount, item) => item.product.discountPrice * item.quantity + amount,
     0
   );
   const totalItems = items.reduce((total, item) => item.quantity + total, 0);
 
   const handleQuantity = (e, item) => {
-    dispatch(updateCartAsync({ id:item.id, quantity: +e.target.value }));
+    dispatch(updateCartAsync({ id: item.id, quantity: +e.target.value }));
   };
 
   const handleRemove = (e, id) => {
@@ -57,11 +55,15 @@ export default function Cart() {
           )}
 
           <div className="flow-root">
-            <ul role="list" className="-my-6 divide-y divide-gray-200">
+            <ul className="-my-6 divide-y divide-gray-200">
               {items.map((item) => (
                 <li key={item.id} className="flex py-6">
                   <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                    <img alt={item.product.title} src={item.product.thumbnail} className="size-full object-cover" />
+                    <img
+                      alt={item.product.title}
+                      src={item.product.thumbnail}
+                      className="size-full object-cover"
+                    />
                   </div>
 
                   <div className="ml-4 flex flex-1 flex-col">

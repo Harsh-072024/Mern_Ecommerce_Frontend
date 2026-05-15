@@ -68,10 +68,7 @@ export default function ProductDeatils() {
       {product && (
         <div className="pt-6">
           <nav aria-label="Breadcrumb">
-            <ol
-              role="list"
-              className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
-            >
+            <ol className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
               {product.breadcrumbs &&
                 product.breadcrumbs.map((breadcrumb) => (
                   <li key={breadcrumb.id}>
@@ -128,7 +125,6 @@ export default function ProductDeatils() {
                 alt="Product"
                 className="h-[500px] w-full object-contain rounded-lg border"
               />
-              
             </div>
           </div>
 
@@ -303,7 +299,7 @@ export default function ProductDeatils() {
                   <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
 
                   <div className="mt-4">
-                    <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
+                    <ul className="list-disc space-y-2 pl-4 text-sm">
                       {product.highlights.map((highlight, index) => (
                         <li key={index} className="text-gray-400">
                           <span className="text-gray-600">{highlight}</span>

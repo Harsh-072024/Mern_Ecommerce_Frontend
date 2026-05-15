@@ -44,13 +44,14 @@ function Checkout() {
 
   useEffect(() => {
     dispatch(clearCoupon());
-    setCode("")
-  }, [items])
+    setCode('');
+  }, [items, dispatch]);
 
-  if (code === "") {
-  dispatch(clearCoupon());
-}
-
+  useEffect(() => {
+    if (code === '') {
+      dispatch(clearCoupon());
+    }
+  }, [code, dispatch]);
 
   const handleRemove = (e, id) => {
     dispatch(deleteItemFromCartAsync(id));
@@ -80,13 +81,7 @@ function Checkout() {
     }
   };
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   if (!cartLoaded) {
     return (
@@ -279,7 +274,7 @@ function Checkout() {
                 <div className="border-b border-gray-900/10 pb-12">
                   <h2 className="text-base/7 font-semibold text-gray-900">Addresses</h2>
                   <p className="mt-1 text-sm/6 text-gray-600">Choose from existing addresses</p>
-                  <ul role="list">
+                  <ul>
                     {user?.addresses?.map((address, index) => (
                       <li
                         key={index}
@@ -364,7 +359,7 @@ function Checkout() {
               <div className="border-t border-gray-200 px-4 py-6 sm:px-0">
                 <h1 className="text-4xl my-5 font-bold tracking-tight text-gray-900">Cart</h1>
                 <div className="flow-root">
-                  <ul role="list" className="-my-6 divide-y divide-gray-200">
+                  <ul className="-my-6 divide-y divide-gray-200">
                     {items.map((item) => (
                       <li key={item.id} className="flex py-6">
                         <div className="size-24 shrink-0 overflow-hidden rounded-md border border-gray-200">

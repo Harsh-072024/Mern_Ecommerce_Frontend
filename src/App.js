@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
+import  { useEffect } from 'react';
 import Home from './pages/Home';
 import './App.css';
 import LoginPage from './pages/LoginPage';
@@ -181,7 +180,7 @@ function App() {
 
   useEffect(() => {
     dispatch(checkAuthAsync());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (user) {
