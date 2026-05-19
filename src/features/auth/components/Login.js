@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { loginUserAsync, selectError, selectLoggedInUser } from '../authSlice';
 import { Link, Navigate } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -10,7 +10,6 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -44,8 +43,8 @@ export default function Login() {
                   id="email"
                   {...register('email', {
                     required: 'email is required',
-                    pattern: {
-                      value: /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,
+                     pattern: {
+                      value: /^[\w.-]+@[\w.-]+\.\w{2,4}$/,
                       message: 'email is not valid',
                     },
                   })}

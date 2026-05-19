@@ -42,9 +42,9 @@ export default function ForgotPassword() {
                   id="email"
                   {...register('email', {
                     required: 'email is required',
-                    pattern: {
-                      value: /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi,
-                      message: 'email not valid',
+                     pattern: {
+                      value: /^[\w.-]+@[\w.-]+\.\w{2,4}$/,
+                      message: 'email is not valid',
                     },
                   })}
                   type="email"

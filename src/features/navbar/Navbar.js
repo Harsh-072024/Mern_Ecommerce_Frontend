@@ -12,6 +12,9 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectItems } from '../cart/cartSlice';
 import { selectUserInfo } from '../user/userSlice';
+import { IoMdSearch } from 'react-icons/io';
+import { useState } from 'react';
+import SearchModal from '../common/SearchModal';
 
 const navigation = [
   { name: 'Products', link: '/', user: true },
@@ -31,6 +34,7 @@ function classNames(...classes) {
 const Navbar = ({ children }) => {
   const items = useSelector(selectItems);
   const userInfo = useSelector(selectUserInfo);
+  const [open, setOpen] = useState(false);
   return (
     <>
       {userInfo && (
@@ -41,7 +45,11 @@ const Navbar = ({ children }) => {
                 <div className="flex items-center">
                   <div className="shrink-0">
                     <Link to="/">
-                      <img alt="Your Company" src="/logo.svg" className="h-5 text-yellow-600 w-auto" />
+                      <img
+                        alt="Your Company"
+                        src="/logo.svg"
+                        className="h-5 text-yellow-600 w-auto"
+                      />
                     </Link>
                   </div>
                   <div className="hidden md:block">
@@ -65,6 +73,19 @@ const Navbar = ({ children }) => {
                       )}
                     </div>
                   </div>
+                 <div>
+                      <div
+                        onClick={() => setOpen(true)}
+                        className="flex items-center border border-gray-400 hover:border-gray-200 bg-gray-800 text-gray-400 px-3 py-2 rounded cursor-pointer  ml-10 pr-10]"
+                      >
+                        <IoMdSearch />
+                        <span className="ml-2">Search products...</span>
+                      </div>
+                    
+
+                    {/* Modal */}
+                    <SearchModal open={open} setOpen={setOpen} />
+                 </div>
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-4 flex items-center md:ml-6">

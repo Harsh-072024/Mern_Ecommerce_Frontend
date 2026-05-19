@@ -19,6 +19,7 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
   // pagination = {_page : 1, _limit=10 }
 
   let queryString = '';
+
   for (let key in filter) {
     const categoryValues = filter[key];
     if (categoryValues.length) {
@@ -31,7 +32,6 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
   for (let key in pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
-
   if (admin) {
     queryString += `admin=true`;
   }
