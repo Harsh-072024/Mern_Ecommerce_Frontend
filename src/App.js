@@ -1,4 +1,4 @@
-import  { useEffect } from 'react';
+import { useEffect } from 'react';
 import Home from './pages/Home';
 import './App.css';
 import LoginPage from './pages/LoginPage';
@@ -32,6 +32,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RazorpayCheckout from './pages/RazorpayCheckout.js';
 import ResetPasswordPage from './pages/ResetPasswordPage.js';
+import { LineWave } from 'react-loader-spinner';
 
 let router = createBrowserRouter([
   {
@@ -152,15 +153,11 @@ let router = createBrowserRouter([
   },
   {
     path: '/forgot-password',
-    element: (
-      <ForgotPasswordPage></ForgotPasswordPage>
-    ),
+    element: <ForgotPasswordPage></ForgotPasswordPage>,
   },
   {
     path: '/reset-password',
-    element: (
-      <ResetPasswordPage></ResetPasswordPage>
-    ),
+    element: <ResetPasswordPage></ResetPasswordPage>,
   },
   {
     path: '/razorpay-checkout',
@@ -189,6 +186,29 @@ function App() {
       dispatch(fetchLoggedInUserAsync());
     }
   }, [dispatch, user]);
+
+  
+  if (!userChecked) {
+    return (
+      <div className="h-screen flex flex-col sm:flex-row items-center justify-center gap-3 text-blue-500 text-center px-4">
+        <p className='text-xl hidden sm:block'>Waking up server... </p>
+        <span>
+          <LineWave
+            visible={true}
+            height="150"
+            width="150"
+            color="#3b82f6"
+            ariaLabel="line-wave-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            firstLineColor=""
+            middleLineColor=""
+            lastLineColor=""
+          />
+        </span>
+      </div>
+    );
+  }
 
   return (
     <>
